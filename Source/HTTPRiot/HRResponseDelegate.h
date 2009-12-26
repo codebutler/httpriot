@@ -24,7 +24,7 @@
  * @param resource The converted objc representation of the response data returned by the server.
  * @param object Any custom object you passed in while making the request.
  */
-- (void)restConnection:(NSURLConnection *)connection didReturnResource:(id)resource object:(id)object;
+- (void)restConnection:(NSURLConnection *)connection didReturnResource:(id)resource response:(NSHTTPURLResponse *)response object:(id)object;
 
 /**
  * Called when the connection fails in situations where the server is not available, etc.

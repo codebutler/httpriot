@@ -21,6 +21,9 @@
     /// Connection object
     NSURLConnection *_connection;
     
+    /// Response received
+    NSURLResponse   *_response;
+    
     /// Data received from response
     NSMutableData   *_responseData;
     

@@ -52,7 +52,7 @@
         _requestMethod  = method;
         _path           = [urlPath copy];
         _options        = [opts retain];
-        _object         = obj;
+        _object         = [obj retain];
         _timeout        = 30.0;
         _delegate       = [[opts valueForKey:kHRClassAttributesDelegateKey] nonretainedObjectValue];
         _formatter      = [[self formatterFromFormat] retain];
@@ -89,6 +89,12 @@
     HRLOG(@"Operation Finished. Releasing...");
     [_connection release];
     _connection = nil;
+    
+    [_response release];
+    _response = nil;
+    
+    [_object release];
+    _object = nil;
     
     [_responseData release];
     _responseData = nil;
@@ -135,6 +141,8 @@
 #pragma mark - NSURLConnection delegates
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSHTTPURLResponse *)response {    
     HRLOG(@"Server responded with:%i, %@", [response statusCode], [NSHTTPURLResponse localizedStringForStatusCode:[response statusCode]]);
+    
+    _response = [response retain];
     
     if ([_delegate respondsToSelector:@selector(restConnection:didReceiveResponse:object:)]) {
         [_delegate performSelectorOnMainThread:@selector(restConnection:didReceiveResponse:object:) withObjects:connection, response, _object, nil];
@@ -186,8 +194,8 @@
         }  
     }
 
-    if([_delegate respondsToSelector:@selector(restConnection:didReturnResource:object:)]) {        
-        [_delegate performSelectorOnMainThread:@selector(restConnection:didReturnResource:object:) withObjects:connection, results, _object, nil];
+    if([_delegate respondsToSelector:@selector(restConnection:didReturnResource:response:object:)]) {        
+        [_delegate performSelectorOnMainThread:@selector(restConnection:didReturnResource:response:object:) withObjects:connection, results, _response, _object, nil];
     }
         
     [self finish];
@@ -238,19 +246,18 @@
     NSDictionary *params = [[self options] valueForKey:kHRClassAttributesParamsKey];
     id body = [[self options] valueForKey:kHRClassAttributesBodyKey];
     NSString *queryString = [[self class] buildQueryStringFromParams:params];
+
+    NSString *urlString = [[composedURL absoluteString] stringByAppendingString:queryString];
+    NSURL *url = [NSURL URLWithString:urlString];
+    [request setURL:url];
     
-    if(_requestMethod == HRRequestMethodGet || _requestMethod == HRRequestMethodDelete) {
-        NSString *urlString = [[composedURL absoluteString] stringByAppendingString:queryString];
-        NSURL *url = [NSURL URLWithString:urlString];
-        [request setURL:url];
-        
-        if(_requestMethod == HRRequestMethodGet) {
-            [request setHTTPMethod:@"GET"];
-        } else {
-            [request setHTTPMethod:@"DELETE"];
-        }
-            
-    } else if(_requestMethod == HRRequestMethodPost || _requestMethod == HRRequestMethodPut) {
+    if(_requestMethod == HRRequestMethodGet) {
+        [request setHTTPMethod:@"GET"];
+    } else {
+        [request setHTTPMethod:@"DELETE"];
+    }
+    
+    if(_requestMethod == HRRequestMethodPost || _requestMethod == HRRequestMethodPut) {
         
         NSData *bodyData = nil;   
         if([body isKindOfClass:[NSDictionary class]]) {
@@ -266,7 +273,6 @@
         }
             
         [request setHTTPBody:bodyData];
-        [request setURL:composedURL];
         
         if(_requestMethod == HRRequestMethodPost)
             [request setHTTPMethod:@"POST"];
