@@ -127,13 +127,16 @@ static NSMutableDictionary *attributes;
 }
 
 + (NSMutableDictionary *)mergedOptions:(NSDictionary *)options {
-    NSMutableDictionary *defaultParams = [NSMutableDictionary dictionaryWithDictionary:[self defaultParams]];
-    [defaultParams addEntriesFromDictionary:[options valueForKey:kHRClassAttributesParamsKey]];
-    
-    options = [NSMutableDictionary dictionaryWithDictionary:options];
-    [(NSMutableDictionary *)options setObject:defaultParams forKey:kHRClassAttributesParamsKey];
+    // Merge parameters
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:[self defaultParams]];
+    [params addEntriesFromDictionary:[options valueForKey:kHRClassAttributesParamsKey]];
+
+    // Merge options, overwriting parameters
     NSMutableDictionary *opts = [NSMutableDictionary dictionaryWithDictionary:[self classAttributes]];
     [opts addEntriesFromDictionary:options];
+    [opts setObject:params forKey:kHRClassAttributesParamsKey];
+
+    // Remove this thing
     [opts removeObjectForKey:kHRClassAttributesDefaultParamsKey];
 
     return opts;

@@ -22,6 +22,10 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		07A0099011AED22C002D45C3 /* HRFormatterText.h in Headers */ = {isa = PBXBuildFile; fileRef = 07A0098E11AED22C002D45C3 /* HRFormatterText.h */; };
+		07A0099111AED22C002D45C3 /* HRFormatterText.m in Sources */ = {isa = PBXBuildFile; fileRef = 07A0098F11AED22C002D45C3 /* HRFormatterText.m */; };
+		07A0099211AED22C002D45C3 /* HRFormatterText.h in Headers */ = {isa = PBXBuildFile; fileRef = 07A0098E11AED22C002D45C3 /* HRFormatterText.h */; };
+		07A0099311AED22C002D45C3 /* HRFormatterText.m in Sources */ = {isa = PBXBuildFile; fileRef = 07A0098F11AED22C002D45C3 /* HRFormatterText.m */; };
 		D00045D70FF2D5DB00CCAF1B /* ISAPeopleDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00045D60FF2D5DB00CCAF1B /* ISAPeopleDetailController.m */; };
 		D00047610FF31D4D00CCAF1B /* ISAEditableTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D00047600FF31D4D00CCAF1B /* ISAEditableTextFieldCell.m */; };
 		D00048240FF35B0E00CCAF1B /* NSObject+InvocationUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = D00048220FF35B0E00CCAF1B /* NSObject+InvocationUtils.h */; };
@@ -158,6 +162,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		07A0098E11AED22C002D45C3 /* HRFormatterText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRFormatterText.h; sourceTree = "<group>"; };
+		07A0098F11AED22C002D45C3 /* HRFormatterText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRFormatterText.m; sourceTree = "<group>"; };
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* HTTPRiot.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HTTPRiot.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -384,6 +390,8 @@
 				D0298A2E0F3FF4FD00EC8C01 /* HRFormatJSON.m */,
 				D0298A320F3FF50800EC8C01 /* HRFormatXML.h */,
 				D0298A330F3FF50800EC8C01 /* HRFormatXML.m */,
+				07A0098E11AED22C002D45C3 /* HRFormatterText.h */,
+				07A0098F11AED22C002D45C3 /* HRFormatterText.m */,
 			);
 			path = Formatters;
 			sourceTree = "<group>";
@@ -589,6 +597,7 @@
 				D09A5DD9106EA0CD00167242 /* SBJsonBase.h in Headers */,
 				D09A5DDB106EA0CE00167242 /* SBJsonParser.h in Headers */,
 				D09A5DDD106EA0CF00167242 /* SBJsonWriter.h in Headers */,
+				07A0099011AED22C002D45C3 /* HRFormatterText.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -627,6 +636,7 @@
 				D09A5D8E106E9C3E00167242 /* SBJsonBase.h in Headers */,
 				D09A5D90106E9C3E00167242 /* SBJsonParser.h in Headers */,
 				D09A5D92106E9C3E00167242 /* SBJsonWriter.h in Headers */,
+				07A0099211AED22C002D45C3 /* HRFormatterText.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -821,6 +831,7 @@
 				D09A5DDA106EA0CE00167242 /* SBJsonBase.m in Sources */,
 				D09A5DDC106EA0CF00167242 /* SBJsonParser.m in Sources */,
 				D09A5DDE106EA0D100167242 /* SBJsonWriter.m in Sources */,
+				07A0099111AED22C002D45C3 /* HRFormatterText.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -851,6 +862,7 @@
 				D09A5D8F106E9C3E00167242 /* SBJsonBase.m in Sources */,
 				D09A5D91106E9C3E00167242 /* SBJsonParser.m in Sources */,
 				D09A5D93106E9C3E00167242 /* SBJsonWriter.m in Sources */,
+				07A0099311AED22C002D45C3 /* HRFormatterText.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -965,10 +977,11 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_ENABLE_OBJC_GC = supported;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				PREBINDING = YES;
 				SDKROOT = "";
 			};

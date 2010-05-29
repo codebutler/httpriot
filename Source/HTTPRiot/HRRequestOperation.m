@@ -9,6 +9,7 @@
 #import "HRRequestOperation.h"
 #import "HRFormatJSON.h"
 #import "HRFormatXML.h"
+#import "HRFormatterText.h"
 #import "NSObject+InvocationUtils.h"
 #import "NSString+EscapingUtils.h"
 #import "NSDictionary+ParamUtils.h"
@@ -308,7 +309,7 @@
             theFormatter = [HRFormatXML class];
         break;
         default:
-            theFormatter = [HRFormatJSON class];
+            theFormatter = [HRFormatterText class];
         break;   
     }
     
