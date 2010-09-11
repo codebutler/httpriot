@@ -52,7 +52,7 @@
  * @param response The response object returned by the server.
  * @param object Any custom object you passed in while making the request.
  */
-- (void)restConnection:(NSURLConnection *)connection didReceiveError:(NSError *)error response:(NSHTTPURLResponse *)response object:(id)object;
+- (void)restConnection:(NSURLConnection *)connection didReceiveError:(NSError *)error resource:(id)resource response:(NSHTTPURLResponse *)response object:(id)object;
 
 /**
  * Called when the HRFormatter recieved an error parsing the response data.

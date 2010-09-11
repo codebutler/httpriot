@@ -928,7 +928,10 @@
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "@rpath";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
-				OTHER_CFLAGS = "-DHTTPRIOT_FRAMEWORK_BUILD";
+				OTHER_CFLAGS = (
+					"-DDEBUG",
+					"-DHTTPRIOT_FRAMEWORK_BUILD",
+				);
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,

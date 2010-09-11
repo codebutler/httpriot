@@ -24,7 +24,6 @@
 - (NSMutableURLRequest *)configuredRequest;
 - (id)formatterFromFormat;
 - (NSURL *)composedURL;
-+ (id)handleResponse:(NSHTTPURLResponse *)response error:(NSError **)error;
 + (NSString *)buildQueryStringFromParams:(NSDictionary *)params;
 - (void)finish;
 @end
@@ -149,21 +148,24 @@
         [_delegate performSelectorOnMainThread:@selector(restConnection:didReceiveResponse:object:) withObjects:connection, response, _object, nil];
     }
     
-    NSError *error = nil;
-    [[self class] handleResponse:(NSHTTPURLResponse *)response error:&error];
+    NSInteger code = [response statusCode];
     
-    if(error) {
-        if([_delegate respondsToSelector:@selector(restConnection:didReceiveError:response:object:)]) {
-            [_delegate performSelectorOnMainThread:@selector(restConnection:didReceiveError:response:object:) withObjects:connection, error, response, _object, nil];
-            [connection cancel];
-            [self finish];
-        }
+    if (code < 200 || code > 299) {
+        NSDictionary *headers = [response allHeaderFields];
+        NSString *errorReason = [NSString stringWithFormat:@"%d Error: ", code];
+        NSString *errorDescription = [[NSHTTPURLResponse localizedStringForStatusCode:code] capitalizedString];
+        NSDictionary *userInfo = [[[NSDictionary dictionaryWithObjectsAndKeys:
+                                    errorReason, NSLocalizedFailureReasonErrorKey,
+                                    errorDescription, NSLocalizedDescriptionKey, 
+                                    headers, kHRClassAttributesHeadersKey, 
+                                    [[response URL] absoluteString], @"url", nil] retain] autorelease];
+        _error = [[NSError errorWithDomain:HTTPRiotErrorDomain code:code userInfo:userInfo] retain];
     }
-    
+        
     [_responseData setLength:0];
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {   
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
     [_responseData appendData:data];
 }
 
@@ -195,10 +197,13 @@
         }  
     }
 
-    if([_delegate respondsToSelector:@selector(restConnection:didReturnResource:response:object:)]) {        
-        [_delegate performSelectorOnMainThread:@selector(restConnection:didReturnResource:response:object:) withObjects:connection, results, _response, _object, nil];
-    }
-        
+    if (!_error) {
+        if([_delegate respondsToSelector:@selector(restConnection:didReturnResource:response:object:)])
+            [_delegate performSelectorOnMainThread:@selector(restConnection:didReturnResource:response:object:) withObjects:connection, results, _response, _object, nil];
+    } else {
+        if([_delegate respondsToSelector:@selector(restConnection:didReceiveError:resource:response:object:)])
+            [_delegate performSelectorOnMainThread:@selector(restConnection:didReceiveError:resource:response:object:) withObjects:connection, _error, results, _response, _object, nil];
+	}
     [self finish];
 }
 
@@ -325,30 +330,6 @@
     id operation = [[self alloc] initWithMethod:method path:urlPath options:requestOptions object:obj];
     [[HROperationQueue sharedOperationQueue] addOperation:operation];
     return [operation autorelease];
-}
-
-+ (id)handleResponse:(NSHTTPURLResponse *)response error:(NSError **)error {
-    NSInteger code = [response statusCode];
-    NSUInteger ucode = [[NSNumber numberWithInt:code] unsignedIntValue];
-    NSRange okRange = NSMakeRange(200, 201);
-    
-    if(NSLocationInRange(ucode, okRange)) {
-        return response;
-    }
-
-    if(error != nil) {
-        NSDictionary *headers = [response allHeaderFields];
-        NSString *errorReason = [NSString stringWithFormat:@"%d Error: ", code];
-        NSString *errorDescription = [NSHTTPURLResponse localizedStringForStatusCode:code];
-        NSDictionary *userInfo = [[[NSDictionary dictionaryWithObjectsAndKeys:
-                                   errorReason, NSLocalizedFailureReasonErrorKey,
-                                   errorDescription, NSLocalizedDescriptionKey, 
-                                   headers, kHRClassAttributesHeadersKey, 
-                                   [[response URL] absoluteString], @"url", nil] retain] autorelease];
-        *error = [NSError errorWithDomain:HTTPRiotErrorDomain code:code userInfo:userInfo];
-    }
-
-    return nil;
 }
 
 + (NSString *)buildQueryStringFromParams:(NSDictionary *)theParams {

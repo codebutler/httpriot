@@ -53,6 +53,9 @@
     
     /// Determines whether the connection is cancelled
     BOOL _isCancelled;
+	
+    // HTTP error if any
+    NSError *_error;
 }
 
 /// The HRResponseDelegate
