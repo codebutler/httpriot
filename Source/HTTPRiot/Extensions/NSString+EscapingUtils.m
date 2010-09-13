@@ -8,6 +8,9 @@
 																				  (CFStringRef)@":/?=,!$&'()*+;[]@#",
 																				  CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding));
 	
-	return [escapedString autorelease];
+	NSString *copy = [NSString stringWithString:escapedString];
+	CFRelease(escapedString);
+	
+	return copy;
 }
 @end
